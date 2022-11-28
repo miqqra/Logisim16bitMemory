@@ -46,8 +46,6 @@ public class BankedRAM extends BankedMem {
     private static final int DIN = MEM_INPUTS + 4;
 
     public static final int DEFAULT_DATA_SIZE = 16;
-    public static final int DEFAULT_BITS_SIZE = 1;
-    public static final int DEFAULT_BITS_VALUE = 0;
     public static final int DATA = 0;
     public static final int ADDR = 1;
     public static final int SEL = 2;
@@ -150,7 +148,7 @@ public class BankedRAM extends BankedMem {
         BitWidth dataBits = state.getAttributeValue(DATA_ATTR);
         Object busVal = state.getAttributeValue(ATTR_BUS);
 
-        state.setPort(BITS, Value.createKnown(BitWidth.create(DEFAULT_BITS_SIZE), DEFAULT_BITS_VALUE), DELAY);
+        state.setPort(BITS, Value.createKnown(BitWidth.create(BankedMem.DEFAULT_BITS_SIZE), BankedMem.DEFAULT_BITS_VALUE), DELAY);
 
         Value addrValue = state.getPort(ADDR);
         Value bits = state.getPort(BITS);
@@ -179,28 +177,26 @@ public class BankedRAM extends BankedMem {
 
         if (!shouldClear && triggered && !outputEnabled) {
             int data = state.getPort(DATA).toIntValue();
-            if (bits.toIntValue() == 0){
-                data = data & ((1<<8)-1);
+            if (bits.toIntValue() == 0) {
+                data = data & ((1 << 8) - 1);
                 myState.getContents().set(addr, data);
-            }
-            else if (bits.toIntValue() == 1){
-                int data1 = data & ((1<<8)-1);
-                int data2 = (data & (((1<<8)-1)<<8)) >>> 8;
+            } else if (bits.toIntValue() == 1) {
+                int data1 = data & ((1 << 8) - 1);
+                int data2 = (data & (((1 << 8) - 1) << 8)) >>> 8;
                 myState.getContents().set(addr, data1);
-                myState.getContents().set(addr+1, data2);
+                myState.getContents().set(addr + 1, data2);
             }
         }
 
         if (outputEnabled) {
             int val = 0;
-            if (bits.toIntValue() == 0){
-                val = myState.getContents().get((long)addr);
-            }
-            else if (bits.toIntValue() == 1){
-                if (addr%2==0){
+            if (bits.toIntValue() == 0) {
+                val = myState.getContents().get((long) addr);
+            } else if (bits.toIntValue() == 1) {
+                if (addr % 2 == 0) {
                     int val1, val2;
                     val1 = myState.getContents().get(addr);
-                    val2 = myState.getContents().get(addr+1);
+                    val2 = myState.getContents().get(addr + 1);
                     val2 = (val2 << 8);
                     val = val1 | val2;
                 }
