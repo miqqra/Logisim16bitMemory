@@ -37,6 +37,8 @@ fabric.properties
 ### Java ###
 # Compiled class file
 *.class
+*.bin
+*.lock
 
 # Log file
 *.log
@@ -48,7 +50,7 @@ fabric.properties
 .mtj.tmp/
 
 # Package Files #
-*.jar
+# *.jar
 *.war
 *.nar
 *.ear
@@ -87,3 +89,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,java,intellij+all
+/.gradle/
