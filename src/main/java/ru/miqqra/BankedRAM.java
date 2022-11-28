@@ -46,6 +46,8 @@ public class BankedRAM extends BankedMem {
     private static final int DIN = MEM_INPUTS + 4;
 
     public static final int DEFAULT_DATA_SIZE = 16;
+    public static final int DEFAULT_BITS_SIZE = 1;
+    public static final int DEFAULT_BITS_VALUE = 0;
     public static final int DATA = 0;
     public static final int ADDR = 1;
     public static final int SEL = 2;
@@ -147,6 +149,8 @@ public class BankedRAM extends BankedMem {
         BankedRamState myState = (BankedRamState) getState(state);
         BitWidth dataBits = state.getAttributeValue(DATA_ATTR);
         Object busVal = state.getAttributeValue(ATTR_BUS);
+
+        state.setPort(BITS, Value.createKnown(BitWidth.create(DEFAULT_BITS_SIZE), DEFAULT_BITS_VALUE), DELAY);
 
         Value addrValue = state.getPort(ADDR);
         Value bits = state.getPort(BITS);
