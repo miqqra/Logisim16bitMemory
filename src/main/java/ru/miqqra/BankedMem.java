@@ -154,9 +154,9 @@ abstract class BankedMem extends InstanceFactory {
         painter.drawPort(CS, BankedStrings.get("ramCSLabel"), Direction.SOUTH);
 
         if (this instanceof BankedROM) {
-            painter.drawPort(BankedROM.BITS, BankedStrings.get("Bit"), Direction.SOUTH);
+            painter.drawPort(BankedROM.BITS, BankedStrings.get("bit"), Direction.SOUTH);
         } else if (this instanceof BankedRAM) {
-            painter.drawPort(BankedRAM.BITS, BankedStrings.get("Bit"), Direction.SOUTH);
+            painter.drawPort(BankedRAM.BITS, BankedStrings.get("bit"), Direction.SOUTH);
         }
     }
 

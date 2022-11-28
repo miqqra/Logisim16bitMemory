@@ -148,7 +148,7 @@ public class BankedRAM extends BankedMem {
         BitWidth dataBits = state.getAttributeValue(DATA_ATTR);
         Object busVal = state.getAttributeValue(ATTR_BUS);
 
-        state.setPort(BITS, Value.createKnown(BitWidth.create(BankedMem.DEFAULT_BITS_SIZE), BankedMem.DEFAULT_BITS_VALUE), DELAY);
+        // state.setPort(BITS, Value.createKnown(BitWidth.create(BankedMem.DEFAULT_BITS_SIZE), BankedMem.DEFAULT_BITS_VALUE), DELAY);
 
         Value addrValue = state.getPort(ADDR);
         Value bits = state.getPort(BITS);
@@ -177,22 +177,20 @@ public class BankedRAM extends BankedMem {
 
         if (!shouldClear && triggered && !outputEnabled) {
             int data = state.getPort(DATA).toIntValue();
-            if (bits.toIntValue() == 0) {
-                data = data & ((1 << 8) - 1);
-                myState.getContents().set(addr, data);
-            } else if (bits.toIntValue() == 1) {
+            if (bits.toIntValue() == 1) {
                 int data1 = data & ((1 << 8) - 1);
                 int data2 = (data & (((1 << 8) - 1) << 8)) >>> 8;
                 myState.getContents().set(addr, data1);
                 myState.getContents().set(addr + 1, data2);
+            } else { // (bits.toIntValue() == 0) || (bits.toIntValue() == -1) //for future versions
+                data = data & ((1 << 8) - 1);
+                myState.getContents().set(addr, data);
             }
         }
 
         if (outputEnabled) {
             int val = 0;
-            if (bits.toIntValue() == 0) {
-                val = myState.getContents().get((long) addr);
-            } else if (bits.toIntValue() == 1) {
+            if (bits.toIntValue() == 1) {
                 if (addr % 2 == 0) {
                     int val1, val2;
                     val1 = myState.getContents().get(addr);
@@ -200,6 +198,8 @@ public class BankedRAM extends BankedMem {
                     val2 = (val2 << 8);
                     val = val1 | val2;
                 }
+            } else { // (bits.toIntValue() == 0) || (bits.toIntValue() == -1)  //for future versions
+                val = myState.getContents().get((long) addr);
             }
             state.setPort(DATA, Value.createKnown(BitWidth.create(DEFAULT_DATA_SIZE), val), DELAY);
         } else {

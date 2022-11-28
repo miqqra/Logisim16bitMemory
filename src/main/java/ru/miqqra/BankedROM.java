@@ -104,7 +104,7 @@ public class BankedROM extends BankedMem {
         Value bits = state.getPort(3);
         boolean chipSelect = state.getPort(2) != Value.FALSE;
 
-        state.setPort(BITS, Value.createKnown(BitWidth.create(BankedMem.DEFAULT_BITS_SIZE), BankedMem.DEFAULT_BITS_VALUE), DELAY);
+        //state.setPort(BITS, Value.createKnown(BitWidth.create(BankedMem.DEFAULT_BITS_SIZE), BankedMem.DEFAULT_BITS_VALUE), DELAY);
 
         if (!chipSelect) {
             myState.setCurrent(-1L);
@@ -117,9 +117,7 @@ public class BankedROM extends BankedMem {
                     myState.scrollToShow((long) addr);
                 }
                 int val = 0;
-                if (bits.toIntValue() == 0) {
-                    val = myState.getContents().get((long) addr);
-                } else if (bits.toIntValue() == 1) {
+                if (bits.toIntValue() == 1) {
                     if (addr % 2 == 0) {
                         int val1, val2;
                         val1 = myState.getContents().get(addr);
@@ -127,6 +125,8 @@ public class BankedROM extends BankedMem {
                         val2 = (val2 << 8);
                         val = val1 | val2;
                     }
+                } else { //(bits.toIntValue() == 0) || (bits.toIntValue() == -1) // for future versions
+                    val = myState.getContents().get((long) addr);
                 }
                 state.setPort(DATA, Value.createKnown(BitWidth.create(16), val), 10);
             }
